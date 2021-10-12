@@ -11,7 +11,7 @@ jobs:
       shell: bash.exe
     steps:
       - checkout
-      - pwd
+      - run: pwd
       # - gcp-gcr/gcr-auth
       # - gcp-gcr/build-image:
       #     image: gcp-orb-windowstest
