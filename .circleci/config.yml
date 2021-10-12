@@ -3,7 +3,12 @@ version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.13.0
   win: circleci/windows@2.4.1
-  
+
+executors:
+  windows-executor:
+    executor:
+      name: win/default
+      shell: bash.exe
 jobs:
   build-and-push:
     executor: 
@@ -12,7 +17,7 @@ jobs:
     steps:
       - checkout
       - gcp-gcr/build-image:
-          image: gcp-orb-test
+          image: gcp-windowsorb-test
           no_output_timeout: 20m
       - run:
           command: |
@@ -24,3 +29,9 @@ workflows:
           context: GCP
           executor: gcp-gcr/default
           image: gcp-orb-test
+      - gcp-gcr/build-and-push-image:
+          context: GCP
+          docker-context: /Windows
+          executor: windows-executor
+          image: gcp-windowsorb-test
+      
