@@ -2,18 +2,17 @@ version: 2.1
 
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.13.0
+  win: circleci/windows@2.2.0
   
 jobs:
   build-and-push:
-    executor: gcp-gcr/default
+    executor: win/default
     steps:
       - checkout
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
           image: gcp-orb-test
           no_output_timeout: 20m
-      - gcp-gcr/push-image:
-          image: gcp-orb-test
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
