@@ -17,6 +17,11 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
+workflows:
+  build_job:
+    jobs:
+      - build-and-push:
+          context: GCP
       - gcp-gcr/build-and-push-image:
           context: GCP
           executor: gcp-gcr/default
@@ -24,8 +29,3 @@ jobs:
           registry-url: us.gcr.io
           setup-remote-docker: true
           use-docker-layer-caching: true
-workflows:
-  build_job:
-    jobs:
-      - build-and-push:
-          context: GCP
