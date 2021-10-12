@@ -1,0 +1,20 @@
+version: 2.1
+
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.13.0
+  
+jobs:
+  build-and-push:
+    executor: gcp-gcr/default
+    steps:
+      - checkout
+      - gcp-gcr/gcr-auth
+      - gcp-gcr/build-image:
+          image: orb-test
+          no_output_timeout: 20m
+          registry-url: eu.gcr.io
+          
+workflows:
+  build_job:
+    jobs:
+      - build-and-push
