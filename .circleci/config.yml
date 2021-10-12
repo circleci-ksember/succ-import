@@ -11,19 +11,20 @@ jobs:
       shell: bash.exe
     steps:
       - checkout
-      - gcp-gcr/gcr-auth
-      - gcp-gcr/build-image:
-          image: gcp-orb-windowstest
-          docker-context: ./Windows
-      - gcp-gcr/push-image:
-          image: gcp-orb-windowstest
+      - pwd
+      # - gcp-gcr/gcr-auth
+      # - gcp-gcr/build-image:
+      #     image: gcp-orb-windowstest
+      #     docker-context: ./Windows
+      # - gcp-gcr/push-image:
+      #     image: gcp-orb-windowstest
 workflows:
   build_job:
     jobs:
-      - gcp-gcr/build-and-push-image:
-          context: GCP
-          executor: gcp-gcr/default
-          image: gcp-orb-test
+      # - gcp-gcr/build-and-push-image:
+      #     context: GCP
+      #     executor: gcp-gcr/default
+      #     image: gcp-orb-test
       - build-and-push:
           context: GCP
       
