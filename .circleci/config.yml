@@ -20,8 +20,6 @@ jobs:
 workflows:
   build_job:
     jobs:
-      - build-and-push:
-          context: GCP
       - gcp-gcr/build-and-push-image:
           context: GCP
           executor: gcp-gcr/default
