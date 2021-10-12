@@ -15,4 +15,5 @@ jobs:
 workflows:
   build_job:
     jobs:
-      - build-and-push
+      - build-and-push:
+          context: GCP
