@@ -12,7 +12,6 @@ jobs:
           image: gcp-orb-test
           no_output_timeout: 20m
       - gcp-gcr/push-image:
-          registry-url: us.gcr.io
           image: gcp-orb-test
       - run:
           command: |
