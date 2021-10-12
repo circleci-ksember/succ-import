@@ -6,7 +6,7 @@ orbs:
   
 jobs:
   build-and-push:
-    executor: win/default
+    executor: gcp-gcr/default
     steps:
       - checkout
       - gcp-gcr/build-image:
