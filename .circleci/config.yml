@@ -9,9 +9,8 @@ jobs:
     steps:
       - checkout
       - gcp-gcr/build-image:
-          image: orb-test
+          image: gcp-orb-test
           no_output_timeout: 20m
-          registry-url: eu.gcr.io
           
 workflows:
   build_job:
