@@ -5,9 +5,7 @@ orbs:
   win: circleci/windows@2.4.1
 
 executors:
-  windows-executor:
-    executor:
-      name: win/default
+  win/default:
       shell: bash.exe
 jobs:
   build-and-push:
@@ -32,6 +30,6 @@ workflows:
       - gcp-gcr/build-and-push-image:
           context: GCP
           docker-context: /Windows
-          executor: windows-executor
+          executor: win/default
           image: gcp-windowsorb-test
       
