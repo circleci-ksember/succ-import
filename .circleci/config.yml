@@ -26,4 +26,3 @@ workflows:
           context: GCP
           executor: gcp-gcr/default
           image: gcp-orb-test
-          registry-url: us.gcr.io
