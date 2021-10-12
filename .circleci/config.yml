@@ -4,9 +4,6 @@ orbs:
   gcp-gcr: circleci/gcp-gcr@0.13.0
   win: circleci/windows@2.4.1
 
-executors:
-  win/default:
-      shell: bash.exe
 jobs:
   build-and-push:
     executor: 
@@ -14,12 +11,12 @@ jobs:
       shell: bash.exe
     steps:
       - checkout
+      - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
-          image: gcp-windowsorb-test
-          no_output_timeout: 20m
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
+          image: gcp-orb-windowstest
+          docker-context: /Windows
+      - gcp-gcr/push-image:
+          image: gcp-orb-windowstest
 workflows:
   build_job:
     jobs:
@@ -27,9 +24,6 @@ workflows:
           context: GCP
           executor: gcp-gcr/default
           image: gcp-orb-test
-      - gcp-gcr/build-and-push-image:
+      - build-and-push:
           context: GCP
-          docker-context: /Windows
-          executor: win/default
-          image: gcp-windowsorb-test
       
