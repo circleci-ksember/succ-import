@@ -22,6 +22,7 @@ workflows:
   build_job:
     jobs:
       - gcp-gcr/build-and-push-image:
+          name: build-push-<< pipeline.git.branch >>
           context: GCP
           executor: gcp-gcr/default
           image: gcp-orb-test
