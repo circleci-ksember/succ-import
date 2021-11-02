@@ -19,8 +19,7 @@ jobs:
       - gcp-gcr/push-image:
           image: gcp-orb-windowstest
 workflows:
-  build_job:
-    name: build-<< pipeline.git.branch >>
+  build-<< pipeline.git.branch >>:
     jobs:
       - gcp-gcr/build-and-push-image:
           context: GCP
