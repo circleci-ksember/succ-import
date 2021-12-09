@@ -1,30 +1,29 @@
 version: 2.1
 
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.13.0
-  win: circleci/windows@2.4.1
+  cypress: cypress-io/cypress@1.29.0
 
-jobs:
-  build-and-push:
-    executor: 
-      name: win/default
-      shell: bash.exe
-    steps:
-      - checkout
-      - run: pwd
-      - gcp-gcr/gcr-auth
-      - gcp-gcr/build-image:
-          image: gcp-orb-windowstest
-          dockerfile: WindowsDockerfile
-      - gcp-gcr/push-image:
-          image: gcp-orb-windowstest
+#jobs:
+#  build-and-push:
+#    executor: 
+#      name: win/default
+#      shell: bash.exe
+#    steps:
+#      - checkout
+#      - run: pwd
+#      - gcp-gcr/gcr-auth
+#      - gcp-gcr/build-image:
+#          image: gcp-orb-windowstest
+#          dockerfile: WindowsDockerfile
+#      - gcp-gcr/push-image:
+#          image: gcp-orb-windowstest
 workflows:
   build_job:
     jobs:
-      - gcp-gcr/build-and-push-image:
-          context: GCP
-          executor: gcp-gcr/default
-          image: gcp-orb-test
-      - build-and-push:
-          context: GCP
-      
+      #- gcp-gcr/build-and-push-image:
+      #    context: GCP
+      #    executor: gcp-gcr/default
+      #    image: gcp-orb-test
+      #- build-and-push:
+      #    context: GCP
+      - cypress/run
