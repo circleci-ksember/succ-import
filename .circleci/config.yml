@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.13.0
+  gcp-gcr: circleci/gcp-gcr@0.14.1
   win: circleci/windows@2.4.1
 
 jobs:
@@ -23,7 +23,9 @@ workflows:
     jobs:
       - gcp-gcr/build-and-push-image:
           context: GCP
-          executor: gcp-gcr/default
+          executor: 
+            machine:
+              image: ubuntu-2004:202011-02
           image: gcp-orb-test
       - build-and-push:
           context: GCP
