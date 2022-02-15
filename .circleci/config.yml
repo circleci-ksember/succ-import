@@ -7,7 +7,7 @@ orbs:
 executors:
   my-latest-ubuntu:
     machine:
-      image: ubuntu-2004:202011-02
+      image: ubuntu-2004:202011-01
 jobs:
   build-and-push:
     executor: 
