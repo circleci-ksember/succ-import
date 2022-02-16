@@ -7,12 +7,12 @@ orbs:
 executors:
   my-latest-ubuntu:
     machine:
-     - image: ubuntu-2004:202011-01
+     image: ubuntu-2004:202011-01
 jobs:
   build-and-push:
     executor: 
       name: my-latest-ubuntu
-      shell: bash.exe
+      #shell: bash.exe
     steps:
       - checkout
       - run: pwd
