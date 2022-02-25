@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   check_git_branch_triggers:
     docker:
-      - image: cimg/base:lts
+      - image: cimg/base:stable
     resource_class: small
     steps:
       - checkout
