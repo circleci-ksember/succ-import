@@ -14,19 +14,17 @@ jobs:
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header "Accept: application/json"   \
-              --url "https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule" > schedulelist.json
+              --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
             export result=$(jq '.items[]' schedulelist.json)
             echo $result
             export BRANCH='klsember-patch-1'
-            export scheduledata=$(jq --null-input \
-              --arg branch "$BRANCH" \
-              '{"name": $branch, "timetable": {"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters": {"branch": $branch}, "description": "string"}')
+            jq --arg branch "$BRANCH" \
+              '{"name": $branch, "timetable": {"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters": {"branch": $branch}, "description": "string"}' > scheduledata
             curl --request POST \
               --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
-              --header "Circle-Token: $CIRCLE_TOKEN" \
-              --header "Accept: application/json"   \
+              --header 'authorization: Circle-Token $CIRCLE_TOKEN' \
+              --header 'content-type: application/json' \
               --data $scheduledata
-
 
 
 
