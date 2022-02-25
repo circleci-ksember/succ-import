@@ -13,7 +13,7 @@ jobs:
             git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' >> BranchList.txt
             curl --request GET \
               --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' \
-              --header 'authorization: Circle-Token Trigger_token'
+              --header 'authorization: Circle-Token $CIRCLE_TOKEN'
 
 
 
