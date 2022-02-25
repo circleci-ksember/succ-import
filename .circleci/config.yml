@@ -24,5 +24,7 @@ jobs:
 workflows:
   build_job:
     jobs:
-      - check_git_branch_triggers
+      - check_git_branch_triggers:
+          context:
+            - api_context
       
