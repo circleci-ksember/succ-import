@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Determine git branches
           command: |
-            git branch -r >> BranchList.txt
+            git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' >> BranchList.txt
             cat BranchList.txt
 
 
