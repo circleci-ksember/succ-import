@@ -12,7 +12,7 @@ jobs:
           command: |
             git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | grep -F 'patch' > BranchList.txt
             curl --request GET \
-              --header "Circle-Token: $CIRCLE_TOKEN" \
+              --header 'Circle-Token: $CIRCLE_TOKEN' \
               --header 'Accept: application/json'    \
               --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
             export result=$(jq '.items[]' schedulelist.json)
@@ -20,11 +20,11 @@ jobs:
             export BRANCH='klsember-patch-1'
             export scheduledata=$(jq --null-input \
               --arg branch "$BRANCH" \
-              '{"name": $branch, "timetable":{"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters":{"branch": $branch}, "description": "string"}')
+              '{"name": $branch, "timetable": {"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters": {"branch": $branch}, "description": "string"}')
             curl --request POST \
               --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
-              --header 'authorization: Circle-Token $CIRCLE_TOKEN' \
-              --header 'content-type: application/json' \
+              --header 'Circle-Token: $CIRCLE_TOKEN' \
+              --header 'Accept: application/json'    \
               --data $scheduledata
 
 
