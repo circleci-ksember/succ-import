@@ -1,30 +1,22 @@
 version: 2.1
 
-orbs:
-  gcp-gcr: circleci/gcp-gcr@0.13.0
-  win: circleci/windows@2.4.1
-
 jobs:
-  build-and-push:
-    executor: 
-      name: win/default
-      shell: bash.exe
+  check_git_branch_triggers:
+    docker:
+      - image: cimg/base:lts
+    resource_class: small
     steps:
       - checkout
-      - run: pwd
-      - gcp-gcr/gcr-auth
-      - gcp-gcr/build-image:
-          image: gcp-orb-windowstest
-          dockerfile: WindowsDockerfile
-      - gcp-gcr/push-image:
-          image: gcp-orb-windowstest
+      - run:
+          name: Determine git branches
+          command: |
+            git branch -r >> BranchList.txt
+            cat BranchList.txt
+
+
+
 workflows:
   build_job:
     jobs:
-      - gcp-gcr/build-and-push-image:
-          context: GCP
-          executor: gcp-gcr/default
-          image: gcp-orb-test
-      - build-and-push:
-          context: GCP
+      - check_git_branch_triggers
       
