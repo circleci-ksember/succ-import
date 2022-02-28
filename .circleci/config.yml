@@ -62,6 +62,8 @@ jobs:
               for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
                 export branchName="$i"
                 export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
+                echo $scheduleID
+                echo $branchName
                 # curl --request DELETE \
                 #   --url https://circleci.com/api/v2/schedule/${scheduleID} \
                 #   --header "Circle-Token: $CIRCLE_TOKEN"
