@@ -18,13 +18,13 @@ jobs:
             export result=$(jq '.items[]' schedulelist.json)
             echo $result
             export BRANCH='klsember-patch-1'
-            scheduledata=$( jq --arg branch "$BRANCH" \
+            export scheduledata=$( jq --arg branch "$BRANCH" \
               '{"name": $branch, "timetable": {"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters": {"branch": $branch}, "description": "string"}' )
             curl --request POST \
               --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header "Accept: application/json"   \
-              --data "${scheduledata}"
+              --data $scheduledata
 
 
 
