@@ -45,6 +45,7 @@ jobs:
                 --header "Circle-Token: $CIRCLE_TOKEN" \
                 --header 'Content-Type: application/json' \
                 --data "$definedschedule"
+              echo "Created new schedule for " $branchName
             done;
 
             #Deleting Schedule for Branches that no longer exist
@@ -54,6 +55,7 @@ jobs:
               curl --request DELETE \
                 --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
                 --header "Circle-Token: $CIRCLE_TOKEN"
+              echo "Deleted Branch schedule for " $branchName
             done;
 
 
