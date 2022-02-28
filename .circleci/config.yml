@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Determine git branches
           command: |
-            cd 'project'
+            cd '/home/circleci/project'
 
             git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | { grep -F 'patch' || true } > BranchList.txt
             curl --request GET \
