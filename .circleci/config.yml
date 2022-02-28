@@ -18,45 +18,53 @@ jobs:
             
             jq '.items[].parameters.branch' schedulelist.json | tr -d '"' > ScheduleList.txt
             
+            if [[ $(grep -v -f ScheduleList.txt BranchList.txt) ]]; then
             #Creating Schedule for Branches that do not have one
-            for i in $(grep -v -f ScheduleList.txt BranchList.txt); do
-              export branchName="$i"
-              export scheduletemplate='{
-                    "name": "%s Scheduled Job",
-                    "timetable": {
-                        "per-hour": 1,
-                        "hours-of-day": [
-                            1
-                        ],
-                        "days-of-week": [
-                            "TUE"
-                        ]
-                    },
-                    "attribution-actor": "current",
-                    "parameters": {
-                        "deploy_prod": true,
-                        "branch": "%s"
-                    },
-                    "description": "string"
-                  }'
-              export definedschedule=$(printf "$scheduletemplate" "$branchName" "$branchName")
-              curl --request POST \
-                --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
-                --header "Circle-Token: $CIRCLE_TOKEN" \
-                --header 'Content-Type: application/json' \
-                --data "$definedschedule"
-              echo "Created new schedule for " $branchName
-            done;
+              for i in $(grep -v -f ScheduleList.txt BranchList.txt); do
+                export branchName="$i"
+                export scheduletemplate='{
+                      "name": "%s Scheduled Job",
+                      "timetable": {
+                          "per-hour": 1,
+                          "hours-of-day": [
+                              1
+                          ],
+                          "days-of-week": [
+                              "TUE"
+                          ]
+                      },
+                      "attribution-actor": "current",
+                      "parameters": {
+                          "deploy_prod": true,
+                          "branch": "%s"
+                      },
+                      "description": "string"
+                    }'
+                export definedschedule=$(printf "$scheduletemplate" "$branchName" "$branchName")
+                curl --request POST \
+                  --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
+                  --header "Circle-Token: $CIRCLE_TOKEN" \
+                  --header 'Content-Type: application/json' \
+                  --data "$definedschedule"
+                echo "Created new schedule for " $branchName
+              done;
+            else
+              echo "No new schedules to create"
+            fi
 
-            #Deleting Schedule for Branches that no longer exist
-            for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
-              export branchName="$i"
-              export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
-              curl --request DELETE \
-                --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
-                --header "Circle-Token: $CIRCLE_TOKEN"
-              echo "Deleted Branch schedule for " $branchName
-            done;
+            if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
+              #Deleting Schedule for Branches that no longer exist
+              for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
+                export branchName="$i"
+                export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
+                curl --request DELETE \
+                  --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
+                  --header "Circle-Token: $CIRCLE_TOKEN"
+                echo "Deleted Branch schedule for " $branchName
+              done;
+            else
+              echo "No schedules to delete"
+            fi
 
 
 workflows:
