@@ -12,7 +12,7 @@ jobs:
           command: |
             cd '/home/circleci/project'
 
-            git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | { grep -F 'patch' || true } > BranchList.txt
+            git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | { grep -F 'patch' || true; } > BranchList.txt
 
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
@@ -58,17 +58,17 @@ jobs:
 
             if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
               echo "This should evaluate if a branch was deleted and a schedule exists"
-              #Deleting Schedule for Branches that no longer exist
+              # Deleting Schedule for Branches that no longer exist
               for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
                 export branchName="$i"
                 export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
-                curl --request DELETE \
-                  --url https://circleci.com/api/v2/schedule/${scheduleID} \
-                  --header "Circle-Token: $CIRCLE_TOKEN"
+                # curl --request DELETE \
+                #   --url https://circleci.com/api/v2/schedule/${scheduleID} \
+                #   --header "Circle-Token: $CIRCLE_TOKEN"
                 echo "Deleted Branch schedule for " $branchName
-              done
-            # else
-            #   echo "No schedules to delete"
+              done;
+            else
+              echo "No schedules to delete"
             fi
 
 
