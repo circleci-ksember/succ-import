@@ -10,18 +10,19 @@ jobs:
       - run:
           name: Determine git branches
           command: |
-            echo "Starting this job"
+            cd $CIRCLE_WORKING_DIRECTORY
             git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | grep -F 'patch' > BranchList.txt
-            cat BranchList.txt
-
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header "Accept: application/json"   \
               --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
-            cat schedulelist.json
             
             jq '.items[].parameters.branch' schedulelist.json | tr -d '"' > ScheduleList.txt
+
+            echo "Printing ScheduleList"
             cat ScheduleList.txt
+            echo "Printing Branch List"
+            cat BranchList.txt
             
             if [[ $(grep -v -f ScheduleList.txt BranchList.txt) ]]; then
             echo "This should evaluate if a new branch exists"
@@ -58,22 +59,20 @@ jobs:
               echo "No new schedules to create"
             fi
 
-            # if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
-            # echo "This should evaluate if a branch was deleted and a schedule exists"
-            #   #Deleting Schedule for Branches that no longer exist
-            #   for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
-            #     export branchName="$i"
-            #     echo branchName
-            #     export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
-            #     echo scheduleID
-            #     curl --request DELETE \
-            #       --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
-            #       --header "Circle-Token: $CIRCLE_TOKEN"
-            #     echo "Deleted Branch schedule for " $branchName
-            #   done
-            # else
-            #   echo "No schedules to delete"
-            # fi
+            if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
+            echo "This should evaluate if a branch was deleted and a schedule exists"
+              #Deleting Schedule for Branches that no longer exist
+              for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
+                export branchName="$i"
+                export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
+                curl --request DELETE \
+                  --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
+                  --header "Circle-Token: $CIRCLE_TOKEN"
+                echo "Deleted Branch schedule for " $branchName
+              done
+            else
+              echo "No schedules to delete"
+            fi
 
 
 workflows:
