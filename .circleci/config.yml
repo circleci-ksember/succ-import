@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Determine git branches
+          name: 'Identify Branches and Create/Delete Triggers'
           command: |
             cd '/home/circleci/project'
 
@@ -22,7 +22,7 @@ jobs:
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header "Accept: application/json"   \
-              --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
+              --url 'https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule' > schedulelist.json
             
             jq '.items[].parameters.branch' schedulelist.json | tr -d '"' > ScheduleList.txt
             
@@ -51,7 +51,7 @@ jobs:
                     }'
                 export definedschedule=$(printf "$scheduletemplate" "$branchName" "$branchName")
                 curl --request POST \
-                  --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
+                  --url https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule \
                   --header "Circle-Token: $CIRCLE_TOKEN" \
                   --header 'Content-Type: application/json' \
                   --data "$definedschedule"
