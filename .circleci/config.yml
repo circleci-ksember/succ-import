@@ -26,8 +26,8 @@ jobs:
             cat BranchList.txt
             
             if [[ $(grep -v -f ScheduleList.txt BranchList.txt) ]]; then
-            echo "This should evaluate if a new branch exists"
-            #Creating Schedule for Branches that do not have one
+              echo "This should evaluate if a new branch exists"
+              #Creating Schedule for Branches that do not have one
               for i in $(grep -v -f ScheduleList.txt BranchList.txt); do
                 export branchName="$i"
                 export scheduletemplate='{
@@ -55,13 +55,13 @@ jobs:
                   --header 'Content-Type: application/json' \
                   --data "$definedschedule"
                 echo "Created new schedule for " $branchName
-              done
+              done;
             else
               echo "No new schedules to create"
             fi
 
             if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
-            echo "This should evaluate if a branch was deleted and a schedule exists"
+              echo "This should evaluate if a branch was deleted and a schedule exists"
               #Deleting Schedule for Branches that no longer exist
               for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
                 export branchName="$i"
@@ -70,7 +70,7 @@ jobs:
                   --url https://circleci.com/api/v2/schedule/${scheduleID} \
                   --header "Circle-Token: $CIRCLE_TOKEN"
                 echo "Deleted Branch schedule for " $branchName
-              done
+              done;
             else
               echo "No schedules to delete"
             fi
