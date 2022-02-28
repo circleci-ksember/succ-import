@@ -66,9 +66,9 @@ jobs:
                   --url https://circleci.com/api/v2/schedule/${scheduleID} \
                   --header "Circle-Token: $CIRCLE_TOKEN"
                 echo "Deleted Branch schedule for " $branchName
-              done;
-            else
-              echo "No schedules to delete"
+              done
+            # else
+            #   echo "No schedules to delete"
             fi
 
 
