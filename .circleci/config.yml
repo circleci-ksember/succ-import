@@ -22,9 +22,9 @@ jobs:
               '{"name": $branch, "timetable": {"per-hour": 0, "hours-of-day": [0], "days-of-week": ["TUE"]}, "attribution-actor": "current", "parameters": {"branch": $branch}, "description": "string"}' )
             curl --request POST \
               --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
-              --header "Circle-Token: $CIRCLE_TOKEN" \
-              --header "Accept: application/json"   \
-              --data $scheduledata
+              --header 'authorization: Basic $CIRCLE_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"klsember-patch-1","timetable":{"per-hour":0,"hours-of-day":[0],"days-of-week":["TUE"]},"attribution-actor":"current","parameters":{"deploy_prod":true,"branch":"klsember-patch-1"},"description":"string"}'
 
 
 
