@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Determine git branches
           command: |
-            cd $CIRCLE_WORKING_DIRECTORY
+            cd '/home/circleci/project'
             git ls-remote --heads origin | awk '{print $2}' | sed 's/refs\/heads\///g' | grep -F 'patch' > BranchList.txt
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
