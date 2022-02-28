@@ -22,7 +22,7 @@ jobs:
             curl --request GET \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header "Accept: application/json"   \
-              --url 'https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule' > schedulelist.json
+              --url https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule > schedulelist.json
             
             jq '.items[].parameters.branch' schedulelist.json | tr -d '"' > ScheduleList.txt
             
