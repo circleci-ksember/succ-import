@@ -16,32 +16,39 @@ jobs:
               --header "Accept: application/json"   \
               --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
             export result=$(jq '.items[]' schedulelist.json)
-            echo $result
-            export BRANCH='klsember-patch-1'
-            export schedule=$( jq --arg branch "$BRANCH" \
-                '{
-                  "name": $branch,
-                  "timetable": {
-                      "per-hour": 1,
-                      "hours-of-day": [
-                          1
-                      ],
-                      "days-of-week": [
-                          "TUE"
-                      ]
-                  },
-                  "attribution-actor": "current",
-                  "parameters": {
-                      "deploy_prod": true,
-                      "branch": $branch
-                  },
-                  "description": "string"
-                }')
-            curl --request POST \
-              --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
-              --header "Circle-Token: $CIRCLE_TOKEN" \
-              --header 'Content-Type: application/json' \
-              --data $schedule
+
+            for i in $(cat BranchList.txt | tr -d '[]"' | tr , '\n'); do
+              export branchName="$i"
+              export existingresult=$(jq '.items[].parameters.branch' schedulelist.json | grep -w -q $branchName && echo "true" || echo "false" )
+              if [[ $existingresult == false ]]; then
+                export scheduletemplate='{
+                      "name": "%s Scheduled Job",
+                      "timetable": {
+                          "per-hour": 1,
+                          "hours-of-day": [
+                              1
+                          ],
+                          "days-of-week": [
+                              "TUE"
+                          ]
+                      },
+                      "attribution-actor": "current",
+                      "parameters": {
+                          "deploy_prod": true,
+                          "branch": "%s"
+                      },
+                      "description": "string"
+                    }'
+                export definedschedule=$(printf "$scheduletemplate" "$branchName" "$branchName")
+                curl --request POST \
+                  --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule \
+                  --header "Circle-Token: $CIRCLE_TOKEN" \
+                  --header 'Content-Type: application/json' \
+                  --data "$definedschedule"
+              else
+                echo "A schedule already exists for this branch"
+              fi
+            done;
 
 
 workflows:
