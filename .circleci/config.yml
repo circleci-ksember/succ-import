@@ -17,8 +17,14 @@ jobs:
               --url 'https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule' > schedulelist.json
             
             jq '.items[].parameters.branch' schedulelist.json | tr -d '"' > ScheduleList.txt
+
+            echo "Printing ScheduleList"
+            cat ScheduleList.txt
+            echo "Printing Branch List"
+            cat BranchList.txt
             
             if [[ $(grep -v -f ScheduleList.txt BranchList.txt) ]]; then
+            echo "This should evaluate if a new branch exists"
             #Creating Schedule for Branches that do not have one
               for i in $(grep -v -f ScheduleList.txt BranchList.txt); do
                 export branchName="$i"
@@ -53,10 +59,13 @@ jobs:
             fi
 
             if [[ $(grep -v -f BranchList.txt ScheduleList.txt) ]]; then
+            echo "This should evaluate if a branch was deleted and a schedule exists"
               #Deleting Schedule for Branches that no longer exist
               for i in $(grep -v -f BranchList.txt ScheduleList.txt); do
                 export branchName="$i"
+                echo branchName
                 export scheduleID=$(jq '.items[] | select(.parameters.branch==env.branchName) | .id' schedulelist.json | tr -d '"')
+                echo scheduleID
                 curl --request DELETE \
                   --url https://circleci.com/api/v2/project/gh/klsember/test-gcp-orbs/schedule/${scheduleID} \
                   --header "Circle-Token: $CIRCLE_TOKEN"
