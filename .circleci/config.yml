@@ -89,8 +89,8 @@ jobs:
               --header 'Content-Type: application/json' \
               --url https://circleci.com/api/v1.1/project/gh/klsember/test-gcp-orbs/tree/main \
               --data '{
-              "revision": "44a6508c66bfc091cf3aeb2e021c9e17a455af7a" // optional
-            }'
+                  "revision": "77e5969a0c5579065a2af862cdcd1fe620a08dd9"
+                }'
 
             
 
