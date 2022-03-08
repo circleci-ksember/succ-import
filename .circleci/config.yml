@@ -87,9 +87,9 @@ jobs:
             curl --request POST \
               --header "Circle-Token: $CIRCLE_TOKEN" \
               --header 'Content-Type: application/json' \
-              --url https://circleci.com/api/v1.1/project/gh/klsember/test-gcp-orbs/tree/main \
+              --url https://circleci.com/api/v1.1/project/gh/klsember/test-gcp-orbs/tree/feature/test-script \
               --data '{
-                  "revision": "77e5969a0c5579065a2af862cdcd1fe620a08dd9"
+                  "revision": "c2d36b8d9aeed3b3a29c8aa4a644eb187127e360"
                 }'
 
             
