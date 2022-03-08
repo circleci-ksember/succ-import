@@ -100,4 +100,7 @@ workflows:
       - check_git_branch_triggers:
           context:
             - api_context
+      - trigger_sha_workflow:
+          context:
+            - api_context
       
