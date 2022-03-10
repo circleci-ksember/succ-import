@@ -13,6 +13,8 @@ jobs:
     steps:
       - checkout
       - run:
+          command: echo ${CIRCLE_PULL_REQUESTS}
+      - run:
           name: Determine git branches
           command: |
             cd '/home/circleci/project'
