@@ -75,12 +75,33 @@ jobs:
             else
               echo "No schedules to delete"
             fi
+  trigger_sha_workflow:
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Triggering with v1 api
+          command: |
+            curl --request POST \
+              --header "Circle-Token: $CIRCLE_TOKEN" \
+              --header 'Content-Type: application/json' \
+              --url https://circleci.com/api/v1.1/project/gh/klsember/test-gcp-orbs/build \
+              --data '{
+                  "revision": "7c95c7b658fdbbc1dc26f93b62e072baa32e0da0",
+                  "branch": "main"
+                }'
 
+            
 
 workflows:
   build_job:
     jobs:
       - check_git_branch_triggers:
+          context:
+            - api_context
+      - trigger_sha_workflow:
           context:
             - api_context
       
